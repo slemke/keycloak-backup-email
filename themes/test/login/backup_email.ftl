@@ -8,18 +8,9 @@
         </div>
         <form class="form-actions" action="${url.loginAction}" method="POST">
             <label for="email">E-Mail</label>
-            <input
-                class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}"
-                name="email"
-                id="kc-accept"
-                type="submit"
-                value="${msg("doAccept")}"
-            />
-            <button
-                class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}"
-                type="submit"
-            >
-                ${msg("doDecline")}
+            <input id="email" type="text" name="email" placeholder="email" />
+            <button class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" type="submit" name="accept">
+                ${msg("doSubmit")}
             </button>
         </form>
     </#if>
