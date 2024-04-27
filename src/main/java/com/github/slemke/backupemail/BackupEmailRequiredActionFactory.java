@@ -12,7 +12,7 @@ public class BackupEmailRequiredActionFactory implements RequiredActionFactory {
 
     @Override
     public String getDisplayText() {
-        return "require user to setup backup email";
+        return "Backup Email";
     }
 
     @Override

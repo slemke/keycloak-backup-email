@@ -3,9 +3,11 @@ package com.github.slemke.backupemail;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.utils.FormMessage;
+import org.keycloak.services.validation.Validation;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 public class BackupEmailRequiredAction implements RequiredActionProvider {
 
@@ -16,6 +18,10 @@ public class BackupEmailRequiredAction implements RequiredActionProvider {
     private static final String USER_ATTRIBUTE_KEY = "backupEmail";
 
     private static final String FORM_PARAMETER_KEY = "email";
+
+    private static final String INVALID_EMAIL_MESSAGE_KEY = "invalidEmailMessage";
+
+    private static final String MISSING_EMAIL_MESSAGE_KEY = "missingEmailMessage";
 
     @Override
     public void evaluateTriggers(RequiredActionContext context) {
@@ -28,20 +34,32 @@ public class BackupEmailRequiredAction implements RequiredActionProvider {
 
     @Override
     public void requiredActionChallenge(RequiredActionContext context) {
-        Response challenge = context.form().createForm(TEMPLATE);
-        context.challenge(challenge);
+        Response response = context.form().createForm(TEMPLATE);
+        context.challenge(response);
     }
 
     @Override
     public void processAction(RequiredActionContext context) {
         MultivaluedMap<String, String> decodedFormParameters = context.getHttpRequest().getDecodedFormParameters();
-        if (!decodedFormParameters.containsKey(FORM_PARAMETER_KEY)) {
-            context.failure();
+        String email = decodedFormParameters.getFirst(FORM_PARAMETER_KEY);
+        if (Validation.isBlank(email)) {
+            challengeWithError(context, email, MISSING_EMAIL_MESSAGE_KEY);
             return;
         }
-        String email = decodedFormParameters.getFirst(FORM_PARAMETER_KEY);
+        if (!Validation.isEmailValid(email)) {
+            challengeWithError(context, email, INVALID_EMAIL_MESSAGE_KEY);
+            return;
+        }
         context.getUser().setSingleAttribute(USER_ATTRIBUTE_KEY, email);
         context.success();
+    }
+
+    private void challengeWithError(RequiredActionContext context, String email, String messageKey) {
+        Response response = context.form()
+            .addError(new FormMessage(FORM_PARAMETER_KEY, messageKey))
+            .setAttribute(USER_ATTRIBUTE_KEY, email)
+            .createForm(TEMPLATE);
+        context.challenge(response);
     }
 
     @Override
