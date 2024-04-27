@@ -17,7 +17,7 @@ endpoint or tokens.
 ### Backup Email Form
 ![backup email form](./screenshots/form.png)
 
-### Backup Email Error (inpit missing)
+### Backup Email Error (input missing)
 ![backup email form missing input](./screenshots/form-missing-email.png)
 
 ### Backup Email Error (input invalid)
