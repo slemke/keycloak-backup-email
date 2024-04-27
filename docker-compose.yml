@@ -13,4 +13,4 @@ services:
       - start-dev
     volumes:
       - ./build/libs:/opt/keycloak/providers
-      - ./themes/test:/opt/keycloak/themes/test
+      - ./themes:/opt/keycloak/themes
