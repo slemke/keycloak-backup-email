@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
-            <version>26.7.4</version>
+            <version>26.8.0</version>
         </dependency>
 
         <dependency>
